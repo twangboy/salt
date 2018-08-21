@@ -522,7 +522,7 @@ def restart(name, timeout=90):
                 created and executed to restart the salt-minion service.
 
         timeout (int):
-            The time in seconds to wait for both :py:func:`service.stop <salt.modules.win_service.stop>`
+            Timeout value passed to :py:func:`service.stop <salt.modules.win_service.stop>`
             and :py:func:`service.start <salt.modules.win_service.start>`. Default is 90 seconds
 
             .. note::
