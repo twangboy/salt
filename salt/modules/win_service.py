@@ -429,8 +429,13 @@ def start(name, timeout=90):
         name (str): The name of the service to start
 
         timeout (int):
-            The time in seconds to wait for the service to start before
-            returning. Default is 90 seconds
+            The time in seconds to wait for service status to change from
+            ``Start Pending`` to ``Running`` before returning.
+            Default is 90 seconds
+            
+        .. note::
+                There is a 30 second timeout between initiating the Start
+                and ``Start Pending`` followed by the user provided timeout. 
 
             .. versionadded:: 2017.7.9, 2018.3.4
 
@@ -471,8 +476,13 @@ def stop(name, timeout=90):
         name (str): The name of the service to stop
 
         timeout (int):
-            The time in seconds to wait for the service to stop before
-            returning. Default is 90 seconds
+            The time in seconds to wait for service status to change from
+            ``Stop Pending`` to ``Stopped`` before returning.
+            Default is 90 seconds
+
+        .. note::
+                There is a 30 second timeout between initiating the Stop
+                and ``Stop Pending`` followed by the user provided timeout. 
 
             .. versionadded:: 2017.7.9, 2018.3.4
 
@@ -501,7 +511,8 @@ def stop(name, timeout=90):
 
 def restart(name, timeout=90):
     '''
-    Restart the named service. This issues a stop command followed by a start.
+    Restart the named service. This issues a :py:func:`service.stop <salt.modules.win_service.stop>` command
+    followed by a :py:func:`service.start <salt.modules.win_service.start>`.
 
     Args:
         name: The name of the service to restart.
@@ -511,8 +522,8 @@ def restart(name, timeout=90):
                 created and executed to restart the salt-minion service.
 
         timeout (int):
-            The time in seconds to wait for the service to stop and start before
-            returning. Default is 90 seconds
+            Timeout value passed to :py:func:`service.stop <salt.modules.win_service.stop>`
+            and :py:func:`service.start <salt.modules.win_service.start>`. Default is 90 seconds
 
             .. note::
                 The timeout is cumulative meaning it is applied to the stop and
