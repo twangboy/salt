@@ -276,7 +276,7 @@ def _run(
     encoded_cmd=False,
     success_retcodes=None,
     windows_codepage=65001,
-    **kwargs,
+    **kwargs
 ):
     """
     Do the DRY thing and only call subprocess.Popen() once
@@ -983,7 +983,7 @@ def run(
     raise_err=False,
     prepend_path=None,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     r"""
     Execute the passed command and return the output as a string
@@ -1230,7 +1230,7 @@ def run(
         password=password,
         encoded_cmd=encoded_cmd,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
 
     log_callback = _check_cb(log_callback)
@@ -1275,7 +1275,7 @@ def shell(
     password=None,
     prepend_path=None,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Execute the passed command and return the output as a string.
@@ -1482,7 +1482,7 @@ def shell(
         bg=bg,
         password=password,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
 
 
@@ -1511,7 +1511,7 @@ def run_stdout(
     password=None,
     prepend_path=None,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Execute a command, and only return the standard out
@@ -1691,7 +1691,7 @@ def run_stdout(
         use_vt=use_vt,
         password=password,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
 
     return ret["stdout"] if not hide_output else ""
@@ -1722,7 +1722,7 @@ def run_stderr(
     password=None,
     prepend_path=None,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Execute a command and only return the standard error
@@ -1902,7 +1902,7 @@ def run_stderr(
         saltenv=saltenv,
         password=password,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
 
     return ret["stderr"] if not hide_output else ""
@@ -1935,7 +1935,7 @@ def run_all(
     encoded_cmd=False,
     prepend_path=None,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Execute the passed command and return a dict of return data
@@ -2159,7 +2159,7 @@ def run_all(
         password=password,
         encoded_cmd=encoded_cmd,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
 
     if hide_output:
@@ -2189,7 +2189,7 @@ def retcode(
     use_vt=False,
     password=None,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Execute a shell command and return the command's return code.
@@ -2358,7 +2358,7 @@ def retcode(
         use_vt=use_vt,
         password=password,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
     return ret["retcode"]
 
@@ -2384,7 +2384,7 @@ def _retcode_quiet(
     use_vt=False,
     password=None,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Helper for running commands quietly for minion startup. Returns same as
@@ -2412,7 +2412,7 @@ def _retcode_quiet(
         use_vt=use_vt,
         password=password,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
 
 
@@ -2439,7 +2439,7 @@ def script(
     bg=False,
     password=None,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Download a script from a remote location and execute the script locally.
@@ -2685,7 +2685,7 @@ def script(
         bg=bg,
         password=password,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
     _cleanup_tempfile(path)
     # If a temp working directory was created (Windows), let's remove that
@@ -2718,7 +2718,7 @@ def script_retcode(
     use_vt=False,
     password=None,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Download a script from a remote location and execute the script locally.
@@ -2876,7 +2876,7 @@ def script_retcode(
         use_vt=use_vt,
         password=password,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )["retcode"]
 
 
@@ -3029,7 +3029,7 @@ def run_chroot(
     use_vt=False,
     bg=False,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     .. versionadded:: 2014.7.0
@@ -3539,7 +3539,7 @@ def powershell(
     depth=None,
     encode_cmd=False,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Execute the passed PowerShell command and return the output as a dictionary.
@@ -3768,7 +3768,7 @@ def powershell(
         password=password,
         encoded_cmd=encoded_cmd,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
 
     # Sometimes Powershell returns an empty string, which isn't valid JSON
@@ -3805,7 +3805,7 @@ def powershell_all(
     encode_cmd=False,
     force_list=False,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     """
     Execute the passed PowerShell command and return a dictionary with a result
@@ -4097,7 +4097,7 @@ def powershell_all(
         password=password,
         encoded_cmd=encoded_cmd,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
     stdoutput = response["stdout"]
 
@@ -4151,7 +4151,7 @@ def run_bg(
     password=None,
     prepend_path=None,
     success_retcodes=None,
-    **kwargs,
+    **kwargs
 ):
     r"""
     .. versionadded: 2016.3.0
@@ -4348,7 +4348,7 @@ def run_bg(
         saltenv=saltenv,
         password=password,
         success_retcodes=success_retcodes,
-        **kwargs,
+        **kwargs
     )
 
     return {"pid": res["pid"]}
