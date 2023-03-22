@@ -2,14 +2,14 @@ import argparse
 import os
 
 arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument("-f", "--file", help="the winrepo file to edit", )
+arg_parser.add_argument("-f", "--file", help="the winrepo file to edit")
 arg_parser.add_argument("-v", "--version", help="The version to add")
 
 args = arg_parser.parse_args()
 file = args.file
 version = args.version
 
-with open (file, "r") as f:
+with open(file) as f:
     current_contents = f.readlines()
 
 new_contents = []
