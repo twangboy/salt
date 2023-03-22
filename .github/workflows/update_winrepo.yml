@@ -3,15 +3,6 @@ name: Add version to salt-minion.sls on salt-winrepo-ng
 
 on:
   release:
-  workflow_dispatch:
-    inputs:
-      saltVersion:
-        description: 'Salt Version'
-        required: true
-      winrepoRepo:
-        description: 'winrepo repository'
-        default: twangboy/salt-winrepo-ng
-#        default: saltstack/salt-winrepo-ng
 
 permissions:
   contents: read
@@ -25,7 +16,7 @@ jobs:
     - name: Checkout WinRepo
       uses: actions/checkout@v3
       with:
-        repository: ${{ github.event.inputs.winrepoRepo }}
+        repository: twangboy/salt-winrepo-ng
 
     - name: Set up Python 3.8
       uses: actions/setup-python@v4
@@ -35,8 +26,8 @@ jobs:
     - name: Add Version to Minion Definition File
       run: |
         python .github/workflows/scripts/update_winrepo.py \
-          --file <path to salt-minion.py> \
-          --version ${{ github.event.inputs.saltVersion }}
+          --file salt-minion.sls \
+          --version v3006.1
 
     - name: Check for changes
       run: git status
@@ -45,7 +36,7 @@ jobs:
       run: git add .
 
     - name: Commit changes
-      run: git commit -m 'Adding salt minion ${{ github.event.inputs.saltVersion }}'
+      run: git commit -m 'Adding salt minion 3006.1"
 
     - name: Create Pull Request
       id: cpr
