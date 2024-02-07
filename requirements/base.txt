@@ -12,6 +12,7 @@ packaging>=21.3
 looseversion
 tornado>=6.3.3
 aiohttp>=3.9.0
+truststore>=0.8.0; python_version >= "3.10"
 
 # We need contextvars for salt-ssh.
 # Even on python versions which ships with contextvars in the standard library!

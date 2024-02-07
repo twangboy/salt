@@ -2962,6 +2962,11 @@ def update_bootstrap(config, url=None):
         log.debug("Updating the bootstrap-salt.sh script to latest stable")
         try:
             import requests
+            try:
+                import truststore
+                truststore.inject_into_ssl()
+            except ImportError:
+                pass
         except ImportError:
             return {
                 "error": (

@@ -133,6 +133,8 @@ timelib==0.3.0
     # via -r requirements/base.txt
 tornado==6.3.3
     # via -r requirements/base.txt
+truststore==0.8.0
+    # via -r requirements/base.txt
 typing-extensions==4.8.0
     # via
     #   inflect

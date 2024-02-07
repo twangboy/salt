@@ -462,6 +462,11 @@ class CloudSdist(Sdist):  # pylint: disable=too-many-ancestors
 
             try:
                 import requests
+                try:
+                    import truststore
+                    truststore.inject_into_ssl()
+                except ImportError:
+                    pass
 
                 req = requests.get(url)
                 if req.status_code == 200:

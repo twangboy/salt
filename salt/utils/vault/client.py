@@ -2,6 +2,13 @@ import logging
 import re
 
 import requests
+
+try:
+    import truststore
+
+    truststore.inject_into_ssl()
+except ImportError:
+    pass
 from requests.packages.urllib3.util.ssl_ import create_urllib3_context
 
 import salt.exceptions

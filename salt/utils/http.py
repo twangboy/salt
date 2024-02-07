@@ -67,6 +67,13 @@ except ImportError:
 try:
     import requests
 
+    try:
+        import truststore
+
+        truststore.inject_into_ssl()
+    except ImportError:
+        pass
+
     HAS_REQUESTS = True
 except ImportError:
     HAS_REQUESTS = False

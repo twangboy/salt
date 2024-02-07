@@ -11,6 +11,13 @@ import logging
 
 import requests
 
+try:
+    import truststore
+
+    truststore.inject_into_ssl()
+except ImportError:
+    pass
+
 import salt.cache
 import salt.crypt
 import salt.exceptions
