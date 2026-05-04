@@ -2,7 +2,7 @@
 Zeromq transport classes
 """
 
-import datetime
+import collections
 import errno
 import hashlib
 import logging
@@ -21,7 +21,6 @@ import salt.ext.tornado.concurrent
 import salt.ext.tornado.gen
 import salt.ext.tornado.ioloop
 import salt.ext.tornado.locks
-import salt.ext.tornado.queues
 import salt.payload
 import salt.transport.base
 import salt.utils.files
@@ -528,7 +527,7 @@ class AsyncReqMessageClient:
         self.context = zmq.eventloop.future.Context()
         self.socket = None
         self._closing = False
-        self._queue = salt.ext.tornado.queues.Queue()
+        self._queue = collections.deque()
 
     def connect(self):
         if self.context is None:
@@ -545,6 +544,7 @@ class AsyncReqMessageClient:
         else:
             self._closing = True
             try:
+                self._queue.clear()
                 if hasattr(self, "socket") and self.socket is not None:
                     self.socket.close(0)
                     self.socket = None
@@ -581,7 +581,7 @@ class AsyncReqMessageClient:
 
         message = salt.payload.dumps(message)
 
-        self._queue.put_nowait((future, message))
+        self._queue.append((future, message))
 
         if callback is not None:
 
@@ -622,10 +622,8 @@ class AsyncReqMessageClient:
         # been closed.
         while send_recv_running:
             try:
-                future, message = yield self._queue.get(
-                    timeout=datetime.timedelta(milliseconds=300)
-                )
-            except _TimeoutError:
+                future, message = self._queue.popleft()
+            except IndexError:
                 try:
                     # For some reason yielding here doesn't work becaues the
                     # future always has a result?
@@ -643,6 +641,7 @@ class AsyncReqMessageClient:
                     log.trace("Send socket closed while polling.")
                     send_recv_running = False
                     break
+                yield salt.ext.tornado.gen.sleep(0.3)
                 continue
 
             try:
@@ -671,7 +670,7 @@ class AsyncReqMessageClient:
                     future.set_exception(exc)
 
             if future.done():
-                if isinstance(future.exception, SaltReqTimeoutError):
+                if isinstance(future.exception(), SaltReqTimeoutError):
                     log.trace("Request timed out while sending. reconnecting.")
                 else:
                     log.trace(
@@ -725,7 +724,7 @@ class AsyncReqMessageClient:
                     break
 
             if future.done():
-                if isinstance(future.exception, SaltReqTimeoutError):
+                if isinstance(future.exception(), SaltReqTimeoutError):
                     log.trace(
                         "Request timed out while waiting for a response. reconnecting."
                     )
