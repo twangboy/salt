@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 import shutil
 
 import pytest
@@ -9,9 +10,35 @@ from tests.conftest import CODE_DIR
 
 log = logging.getLogger(__name__)
 
+PINNED_REQUIREMENT = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*==\S+$")
+
+
+def _write_onedir_constraints(shell, script_path, constraints_path):
+    """
+    Write a pip constraints file pinning every package currently installed in
+    the onedir, except salt itself.
+
+    The salt-analytics-framework test extension pulls in dependencies (such as
+    pydantic) that can require newer versions of packages than the ones the
+    onedir pins. Without constraints, pip resolves that conflict by replacing
+    the onedir's salt with a different salt release from PyPI, which breaks
+    every test that runs afterwards.
+    """
+    ret = shell.run(str(script_path), "freeze")
+    assert ret.returncode == 0
+    pins = []
+    for line in ret.stdout.splitlines():
+        line = line.strip()
+        if not PINNED_REQUIREMENT.match(line):
+            continue
+        if line.lower().startswith("salt=="):
+            continue
+        pins.append(line)
+    constraints_path.write_text("\n".join(pins) + "\n")
+
 
 @pytest.fixture(autouse=True)
-def _install_salt_extension(shell):
+def _install_salt_extension(shell, tmp_path):
     if os.environ.get("ONEDIR_TESTRUN", "0") == "0":
         yield
         return
@@ -22,8 +49,16 @@ def _install_salt_extension(shell):
 
     script_path = CODE_DIR / "artifacts" / "salt" / script_name
     assert script_path.exists()
+    constraints_path = tmp_path / "onedir-constraints.txt"
     try:
-        ret = shell.run(str(script_path), "install", "salt-analytics-framework==0.1.0")
+        _write_onedir_constraints(shell, script_path, constraints_path)
+        ret = shell.run(
+            str(script_path),
+            "install",
+            "-c",
+            str(constraints_path),
+            "salt-analytics-framework==0.1.0",
+        )
         assert ret.returncode == 0
         log.info(ret)
         yield
